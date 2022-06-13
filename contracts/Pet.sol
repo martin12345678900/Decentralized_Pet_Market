@@ -36,6 +36,14 @@ contract Pet is ERC721URIStorage {
         return s_tokenId;
     }
 
+    // we deploy contract at 10:38
+    // we mint the pet nft at 10:40
+    // we call the _feedPet(uint256 tokenId) function at 10:42
+    // 10:40 - 10:38 = 2 -> 2 > 5 -> false
+    // lastUpdatedAt becomes equal to 10:42
+    // lastTimestamp becomes equal to 10:42 + 5 minutes -> 10:47
+
+
     function _feedPet(uint256 tokenId) external virtual returns(bool) {
         PetItem memory pet = s_petItems[tokenId];
         if (pet.lastUptatedAt - s_lastTimestamp > s_time) revert Pet__PetStarves();
@@ -45,5 +53,21 @@ contract Pet is ERC721URIStorage {
         s_lastTimestamp = block.timestamp + s_time;
 
         return true;
+    }
+
+    function getLastTimestampt() external view returns(uint256) {
+        return s_lastTimestamp;
+    }
+
+    function getTokenId() external view returns(uint256) {
+        return s_tokenId;
+    }
+
+    function getPet(uint256 tokenId) external view returns(PetItem memory) {
+        return s_petItems[tokenId];
+    }
+
+    function getTime() external pure returns(uint256) {
+        return s_time;
     }
 }
